@@ -36,8 +36,9 @@ parser.add_argument('-space-char', help='Your space char (Optional, default spac
 parser.add_argument('-gap-char', help='Your char between letters (Optional, default space char — empty)', default='',
                     type=str,
                     required=False)
-parser.add_argument('-font', help="Your Font (Optional, default font — Arial)", type=str, default='Arial.ttf',
+parser.add_argument('-font', help="Your Font (Optional, default font — Arial)", type=str, default='arial.ttf',
                     required=False)
+parser.add_argument('--caps', help='FRANK or frank for ascii text', action='store_true')
 parser.add_argument('-align', help="Text Align(center, left, right) (Optional, default align — left)", type=str,
                     default="left", required=False)
 parser.add_argument('-spacing', help="Text Spacing (Optional, default spacing — 0)", type=int,
@@ -45,7 +46,7 @@ parser.add_argument('-spacing', help="Text Spacing (Optional, default spacing �
 parser.add_argument('-size', help="Font Size (Optional, default size — 10)", type=int, default=10, required=False)
 parser.add_argument('-signature', help="Your Signature. \\n — for new line(Optional, default signature — mine(✿´‿`))",
                     type=str,
-                    default="Made by Mikelarg\\nhttps://vk.com/mikelarg",
+                    default="Made by Mikelarg\\nUpgraded to python3 by thugzook",
                     required=False)
 parser.add_argument('--left', action='store_true', help="If argument is defined, script writes you signature left side",
                     required=False)
@@ -59,13 +60,13 @@ parser.add_argument('--save-image', action='store_true', help="Save text image t
 '''
 
 args = parser.parse_args()
-args.text = args.text.decode("utf-8").replace("\\n", "\n")
-args.char = args.char.decode("utf-8")
-args.gap_char = args.gap_char.decode("utf-8")
-args.space_char = args.space_char.decode("utf-8")
-args.hr_char = args.hr_char.decode("utf-8")
+args.text = args.text.replace("\\n", "\n")
+args.char = args.char
+args.gap_char = ("⠀")
+args.space_char = args.space_char
+args.hr_char = args.hr_char
 args.align = args.align.lower()
-args.signature = args.signature.decode("utf-8")
+args.signature = args.signature
 
 font = ImageFont.truetype(args.font, args.size)
 
@@ -79,7 +80,8 @@ for line in text_lines:
     line_width, line_height = font.getsize(line)
     size[1] += line_height + args.spacing
     size[0] = max(size[0], line_width)
-size = (size[0], size[1])
+size = (int(float(size[0]) * 1.2) , size[1]) # default arial text was being cut off without a buffer
+print(f"size {size}")
 
 '''
     Draw Image
@@ -92,13 +94,23 @@ if args.save_image:
     image.save('out.png')
 
 '''
+    Define FRANK array
+'''
+
+count = 0
+lower = ["F", "R", "A", "N", "K"]
+upper = ["f", "r", "a", "n", "k"]
+
+frank_array = upper if not args.caps else lower
+
+'''
     Convert Image To ASCII
 '''
 
 hr = args.hr_char * (image.width + image.width * len(args.gap_char) - 1)
 
 if args.hr:
-    print hr
+    print (hr)
 
 up_padding = True
 for row_num in range(size[1]):
@@ -107,13 +119,14 @@ for row_num in range(size[1]):
         if image.getpixel((column, row_num)):
             line.append(args.space_char)
         else:
-            line.append(args.char)
+            line.append(frank_array[count % 5])
+            count += 1
             up_padding = False
     if up_padding is False:
-        print args.gap_char.join(line)
+        print (args.gap_char.join(line))
 
 if args.hr:
-    print hr
+    print (hr)
 
 '''
     Adding Signature
@@ -123,6 +136,6 @@ signature = args.signature
 lines = signature.split("\\n")
 for line in lines:
     if args.left:
-        print line
+        print (line)
     else:
-        print (' ' * (image.width - len(line))) + line
+        print ((' ' * (image.width - len(line))) + line)

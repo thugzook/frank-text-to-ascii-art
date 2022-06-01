@@ -114,47 +114,25 @@ if args.hr:
 
 up_padding = True
 left_align = True
-is_ANK = False # for discord, we need to remove a space after ANK becuase of the font.
 for row_num in range(size[1]):
     line = []
     for column in range(size[0]):
+        # append frank at the end so we don't get pruned by the bot
+        if (row_num == size[1] -1 and column == size[0] - 1 ):
+            while (count % 5 != 0):
+                line.append(frank_array[count % 5])
+                count += 1
+
         if image.getpixel((column, row_num)):
             if not left_align:
-                if is_ANK:
-                    line.append("  ")
-                    is_ANK = False
-                else:
-                    line.append("  ")
-                # line.append(args.space_char)
+                line.append(args.gap_char)
         else:
             line.append(frank_array[count % 5])
-            # check if appended letter was ANK
-            if (count % 5 == 0):
-                is_ANK = False
-            elif (count % 5 == 2 or 
-                count % 5 == 3 or 
-                count % 5 == 4):
-                is_ANK = True
-
             count += 1
             up_padding = False
             left_align = False
 
+    
     if up_padding is False:
         print (args.gap_char.join(line))
     left_align = True
-
-if args.hr:
-    print (hr)
-
-'''
-    Adding Signature
-'''
-
-signature = args.signature
-lines = signature.split("\\n")
-for line in lines:
-    if args.left:
-        print (line)
-    else:
-        print ((' ' * (image.width - len(line))) + line)

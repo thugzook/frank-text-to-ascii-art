@@ -62,7 +62,7 @@ parser.add_argument('--save-image', action='store_true', help="Save text image t
 args = parser.parse_args()
 args.text = args.text.replace("\\n", "\n")
 args.char = args.char
-args.gap_char = ("⠀")
+args.gap_char = ("  ")
 args.space_char = args.space_char
 args.hr_char = args.hr_char
 args.align = args.align.lower()
@@ -80,7 +80,7 @@ for line in text_lines:
     line_width, line_height = font.getsize(line)
     size[1] += line_height + args.spacing
     size[0] = max(size[0], line_width)
-size = (int(float(size[0]) * 1.2) , size[1]) # default arial text was being cut off without a buffer
+size = (int(float(size[0]) * 1.5) , size[1]) # default arial text was being cut off without a buffer
 print(f"size {size}")
 
 '''
@@ -113,17 +113,36 @@ if args.hr:
     print (hr)
 
 up_padding = True
+left_align = True
+is_ANK = False # for discord, we need to remove a space after ANK becuase of the font.
 for row_num in range(size[1]):
     line = []
     for column in range(size[0]):
         if image.getpixel((column, row_num)):
-            line.append(args.space_char)
+            if not left_align:
+                if is_ANK:
+                    line.append("  ")
+                    is_ANK = False
+                else:
+                    line.append("  ")
+                # line.append(args.space_char)
         else:
             line.append(frank_array[count % 5])
+            # check if appended letter was ANK
+            if (count % 5 == 0):
+                is_ANK = False
+            elif (count % 5 == 2 or 
+                count % 5 == 3 or 
+                count % 5 == 4):
+                is_ANK = True
+
             count += 1
             up_padding = False
+            left_align = False
+
     if up_padding is False:
         print (args.gap_char.join(line))
+    left_align = True
 
 if args.hr:
     print (hr)

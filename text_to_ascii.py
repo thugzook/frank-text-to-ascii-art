@@ -21,7 +21,21 @@ import argparse
                           █
 #############################################################
 '''
+'''
+usage:
+py .\text_to_ascii.py -text "<text>"  -font "arial.ttf"
 
+So ugly in mono, but it works for discord ¯\_(ツ)_/¯
+
+f              r                                  a          n                                              k  f  r  a                                                                  n                  k
+f              r                                  a          n                                              k                                                                              f                  r
+a              n              k  f              r          a              n  k                          f                      r  a          n  k  f          r  a  n          k          f      r
+a  n  k  f  r          a          n          k          f          r          a                      n  k  f              r                      a          n          k      f      r          a
+n              k          f  r  a  n          k          f          r          a                      n                      k              f  r  a          n          k      f  r  a          n
+k              f          r                      a          n          k          f                      r                      a          n          k          f          r      a      n
+k              f              r  a  n          k          f              r  a                          n                      k          f  r  a  n          k          f      r          a      n
+    k
+'''
 '''
     Arguments Parser Init
 '''
